@@ -4,8 +4,12 @@ const inpHref = document.getElementById("inpHref")
 const inpRegionsKode = document.getElementById("inpRegionsKode")
 const postButton = document.getElementById("postButton")
 const putButton = document.getElementById("putKommune")
+const deleteKode = document.getElementById("deleteKode")
+const deleteButton = document.getElementById("deleteButton")
 
-const kommuneUrl = "http://localhost:8080/kommune"
+const postUrl = "http://localhost:8080/addkommune"
+const putUrl = "http://localhost:8080/putkommune"
+const deleteUrl = "http://localhost:8080/deletekommune"
 
 function getKommune() {
     const kommune = {}
@@ -20,10 +24,22 @@ function getKommune() {
 
 async function postKommune() {
     const kommune = getKommune()
-    const response = await postObjectAsJson(kommuneUrl, kommune, "POST")
+    const response = await postObjectAsJson(postUrl, kommune, "POST")
     if (response.ok) {
         alert("Kommune gemt")
     }
+}
+
+async function deleteKommune() {
+    const kommuneKode = deleteKode.value
+    const url = deleteUrl + "/" + kommuneKode
+    const response = await fetch(url, {
+        method: "DELETE",
+    });
+    if (response.ok) {
+        alert("Kommune deleted");
+    }
+
 }
 
 async function postObjectAsJson(url, object, httpVerbum) {
@@ -41,10 +57,10 @@ async function postObjectAsJson(url, object, httpVerbum) {
 }
 
 async function putKommune() {
-    const Kommune = getKommune()
-    const putUrl = KommuneUrl + "/" + Kommune.kode
-    console.log(putUrl)
-    const res = await postObjectAsJson(putUrl, Kommune, "PUT")
+    const kommune = getKommune()
+    const url = putUrl + "/" + kommune.kode
+    console.log(url)
+    const res = await postObjectAsJson(url, kommune, "PUT")
     if (res.ok) {
         alert("Kommune updated")
     }
@@ -53,3 +69,4 @@ async function putKommune() {
 
 postButton.addEventListener("click", postKommune)
 putButton.addEventListener("click", putKommune)
+deleteButton.addEventListener("click", deleteKommune)
